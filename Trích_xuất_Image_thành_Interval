@@ -1,0 +1,76 @@
+import numpy as np
+
+# ==========================
+# 1. ẢNH 4×4
+# ==========================
+I = np.array([
+    [0, 0, 1, 1],
+    [0, 0, 1, 1],
+    [0, 2, 2, 2],
+    [2, 2, 3, 3]
+])
+
+G = 4   # số mức xám: 0,1,2,3
+d = 1   # khoảng cách
+theta = 0  # hướng ngang
+
+# ==========================
+# 2. LẤY CÁC CẶP (pixel, pixel bên phải)
+# ==========================
+pairs = []
+rows, cols = I.shape
+
+for r in range(rows):
+    for c in range(cols - 1):
+        pairs.append((int(I[r, c]), int(I[r, c+1])))
+
+
+print("Các cặp pixel theo hướng 0°:")
+print(pairs)
+print("Tổng số cặp =", len(pairs))
+
+# ==========================
+# 3. GLCM không chuẩn hóa P(i,j)
+# ==========================
+P = np.zeros((G, G), dtype=int)
+
+for (i, j) in pairs:
+    P[i, j] += 1
+
+print("\nMa trận GLCM không chuẩn hóa P(i,j):")
+print(P)
+
+# ==========================
+# 4. GLCM chuẩn hóa
+# ==========================
+P_norm = P / np.sum(P)
+
+print("\nMa trận GLCM chuẩn hóa P_norm(i,j):")
+print(P_norm)
+
+# ==========================
+# 5a. TÍNH CONTRAST
+# ==========================
+contrast = 0
+for i in range(G):
+    for j in range(G):
+        contrast += (i - j)**2 * P_norm[i, j]
+
+print("\nContrast =", contrast)
+
+# ==========================
+# 5b. TÍNH HOMOGENEITY
+# ==========================
+homogeneity = 0
+for i in range(G):
+    for j in range(G):
+        homogeneity += P_norm[i, j] / (1 + abs(i - j))
+
+print("Homogeneity =", homogeneity)
+
+# ==========================
+# 5c. TÍNH ENERGY (ASM)
+# ==========================
+energy = np.sum(P_norm**2)
+
+print("Energy (ASM) =", energy)
