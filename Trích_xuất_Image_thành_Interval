@@ -74,3 +74,4 @@ print("Homogeneity =", homogeneity)
 energy = np.sum(P_norm**2)
 
 print("Energy (ASM) =", energy)
+
